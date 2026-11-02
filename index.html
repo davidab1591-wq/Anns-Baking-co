@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ann's Baking Co.</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FCF1E4">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FCF1E4; --surface:#FFF9F1; --ink:#4A1F10; --muted:#7D5E52; --line:#EBCFC2;
+  --berry:#C4564F; --daisy:#F2B33D; --swiggy:#FC8019; --zomato:#E23744; --onbtn:#FFFFFF;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#1F1511; --surface:#2C1F19; --ink:#F7E9DD; --muted:#C6AEA2; --line:#4A362D; --berry:#F29A92;}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 Figtree,system-ui,sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
+h1,h2{font-family:Fraunces,Georgia,serif;line-height:1.1;margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--berry);outline-offset:3px}
+
+/* hero */
+.gingham{height:18px;background-color:#fff;background-image:linear-gradient(90deg,rgba(232,150,150,.55) 50%,transparent 50%),linear-gradient(rgba(232,150,150,.55) 50%,transparent 50%);background-size:18px 18px}
+.hero{padding:36px 0 36px;text-align:center}
+.logo{width:min(300px,72vw);height:auto;display:block;margin:0 auto 18px}
+.hero p{max-width:34ch;margin:0 auto 26px;font-size:1.2rem}
+.order{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;border-radius:999px;
+  font:600 1.05rem Figtree,sans-serif;text-decoration:none;color:var(--onbtn);border:0;cursor:pointer;
+  transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.btn.swiggy{background:var(--swiggy);color:#1a0d00}
+.btn.zomato{background:var(--zomato)}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.note{margin-top:14px;font-size:.95rem;color:var(--muted)}
+
+/* menu */
+section{padding:28px 0}
+h2{font-size:2rem;font-weight:700;margin-bottom:6px}
+.cat{margin-top:28px}
+.cat h3{margin:0 0 4px;font:600 1.1rem Figtree,sans-serif;color:var(--berry)}
+.item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.item .txt{flex:1;min-width:0}
+.thumb{width:76px;height:76px;flex:none;border-radius:16px;object-fit:cover;background:var(--surface);border:1px solid var(--line)}
+.item b{display:block;font-weight:600}
+.item span{color:var(--muted);font-size:.95rem}
+.price{white-space:nowrap;font-weight:600}
+
+/* info */
+.info{background:var(--surface);border-radius:20px;padding:24px;margin:8px 0 0}
+.info p{margin:0 0 10px}
+.info p:last-child{margin:0}
+footer{padding:36px 0 56px;color:var(--muted);font-size:.9rem}
+
+/* sticky order bar on phones */
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));
+  background:var(--bg);border-top:1px solid var(--line);z-index:5}
+.bar .btn{flex:1;min-height:48px;padding:0 10px}
+@media(min-width:700px){.bar{display:none}}
+@media(max-width:699px){footer{padding-bottom:110px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="gingham" aria-hidden="true"></div>
+<header class="wrap hero">
+  <h1 class="sr" id="name">Ann's Baking Co.</h1>
+  <img class="logo" src="logo.webp" alt="Ann's Baking Co. logo" width="300" height="293">
+  <p id="tagline"></p>
+  <div class="order">
+    <a class="btn swiggy" id="swiggy" target="_blank" rel="noopener">Order on Swiggy</a>
+    <a class="btn zomato" id="zomato" target="_blank" rel="noopener">Order on Zomato</a>
+  </div>
+  <p class="note" id="hours"></p>
+</header>
+
+<main class="wrap">
+  <section id="menu">
+    <h2>Menu</h2>
+    <div id="menuList"></div>
+  </section>
+
+  <section id="contact">
+    <h2>Custom cakes and bulk orders</h2>
+    <div class="info">
+      <p id="customText"></p>
+      <p><a class="btn ghost" id="wa" target="_blank" rel="noopener">Message on WhatsApp</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div id="address"></div>
+  <div id="fssai"></div>
+</footer>
+
+<nav class="bar" aria-label="Order online">
+  <a class="btn swiggy" id="swiggy2" target="_blank" rel="noopener">Swiggy</a>
+  <a class="btn zomato" id="zomato2" target="_blank" rel="noopener">Zomato</a>
+</nav>
+
+<script>
+/* ===== EDIT THIS BLOCK ONLY ===== */
+const BAKERY = {
+  name: "Ann's Baking Co.",
+  tagline: "Small-batch cakes, brownies and cookies, baked fresh at home.",
+  hours: "Open daily, 10 am to 8 pm. Cakes need 1 day notice.",
+  swiggyUrl: "https://www.swiggy.com/",   // paste your restaurant page link
+  zomatoUrl: "https://www.zomato.com/",   // paste your restaurant page link
+  whatsapp: "919999999999",                // country code + number, no + or spaces
+  customText: "Birthday cakes, wedding favours and corporate gifting are made to order. Message us at least 2 days ahead.",
+  address: "Pickup area: Your locality, Bengaluru",
+  fssai: "FSSAI Lic. No. 00000000000000",
+  // For each item: "art" picks the placeholder drawing (cake, brownie, cookie).
+  // When you have a real photo, add  image: "images/truffle.webp"  and it replaces the drawing.
+  menu: [
+    { category: "Cakes", items: [
+      { art: "cake", name: "Dutch truffle cake", note: "Half kg, eggless available", price: 650 },
+      { art: "cake", name: "Biscoff cheesecake", note: "Baked, 6 inch", price: 899 }
+    ]},
+    { category: "Brownies and bars", items: [
+      { art: "brownie", name: "Fudgy walnut brownies", note: "Box of 6", price: 420 },
+      { art: "brownie", name: "Millet jaggery blondies", note: "Box of 6", price: 380 }
+    ]},
+    { category: "Cookies", items: [
+      { art: "cookie", name: "Brown butter choc chip", note: "Box of 8", price: 350 },
+      { art: "cookie", name: "Oat and raisin", note: "Box of 8", price: 300 }
+    ]}
+  ]
+};
+/* ===== END EDIT BLOCK ===== */
+
+const $ = id => document.getElementById(id);
+document.title = BAKERY.name;
+$("tagline").textContent = BAKERY.tagline;
+$("hours").textContent = BAKERY.hours;
+$("customText").textContent = BAKERY.customText;
+$("address").textContent = BAKERY.address;
+$("fssai").textContent = BAKERY.fssai;
+["swiggy","swiggy2"].forEach(i => $(i).href = BAKERY.swiggyUrl);
+["zomato","zomato2"].forEach(i => $(i).href = BAKERY.zomatoUrl);
+$("wa").href = "https://wa.me/" + BAKERY.whatsapp + "?text=" + encodeURIComponent("Hi, I'd like to place a custom order.");
+
+const ART = {
+  cake: `<svg viewBox="0 0 76 76"><rect width="76" height="76" fill="#FBE3DC"/><ellipse cx="38" cy="62" rx="26" ry="5" fill="#EBC6BC"/><rect x="16" y="36" width="44" height="26" rx="6" fill="#7A3B22"/><rect x="16" y="46" width="44" height="5" fill="#F3D9C4"/><path d="M14 36c0-8 10-12 24-12s24 4 24 12c-4 5-8 0-12 5s-8-1-12 4-8-1-12 4-8 0-12-5z" fill="#F4A3A0"/><circle cx="38" cy="22" r="5" fill="#C4564F"/><path d="M38 17c1-5 4-7 8-8" stroke="#4F7A3A" stroke-width="2" fill="none"/></svg>`,
+  brownie: `<svg viewBox="0 0 76 76"><rect width="76" height="76" fill="#FBE3DC"/><rect x="12" y="30" width="52" height="30" rx="5" fill="#4A2214" transform="skewX(-6) translate(4 0)"/><rect x="12" y="24" width="52" height="14" rx="5" fill="#6B3420" transform="skewX(-6) translate(4 0)"/><path d="M24 31q3-4 6 0t6 0 6 0" stroke="#A25E3C" stroke-width="2" fill="none"/><circle cx="26" cy="46" r="3.2" fill="#C98F5B"/><circle cx="42" cy="50" r="3.2" fill="#C98F5B"/><circle cx="54" cy="44" r="3.2" fill="#C98F5B"/><path d="M60 14l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#F2B33D"/></svg>`,
+  cookie: `<svg viewBox="0 0 76 76"><rect width="76" height="76" fill="#FBE3DC"/><circle cx="38" cy="40" r="25" fill="#D9A164"/><circle cx="38" cy="38" r="25" fill="#E8B87A"/><circle cx="28" cy="30" r="4" fill="#4A2214"/><circle cx="46" cy="28" r="3.5" fill="#4A2214"/><circle cx="36" cy="44" r="4.5" fill="#4A2214"/><circle cx="52" cy="42" r="3.5" fill="#4A2214"/><circle cx="26" cy="49" r="3" fill="#4A2214"/><circle cx="45" cy="53" r="3" fill="#4A2214"/></svg>`
+};
+function pic(i){
+  if (i.image) return `<img class="thumb" src="${i.image}" alt="${i.name}" loading="lazy">`;
+  return `<div class="thumb" role="img" aria-label="${i.name} illustration" style="overflow:hidden">${ART[i.art] || ART.cake}</div>`;
+}
+
+$("menuList").innerHTML = BAKERY.menu.map(c =>
+  `<div class="cat"><h3>${c.category}</h3>` +
+  c.items.map(i =>
+    `<div class="item">${pic(i)}<div class="txt"><b>${i.name}</b><span>${i.note || ""}</span></div><div class="price">₹${i.price}</div></div>`
+  ).join("") + `</div>`
+).join("");
+if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {})); }
+</script>
+</body>
+</html>
